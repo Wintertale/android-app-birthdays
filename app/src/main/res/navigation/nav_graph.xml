@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/mainEventsListFragment"
-        android:name="com.example.events.fragments.MainEventsListFragment"
+        android:name="com.example.events.ui.fragments.MainEventsListFragment"
         android:label="@string/label_fragment_main_events_list"
         tools:layout="@layout/fragment_main_events_list" />
 
