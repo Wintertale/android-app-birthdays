@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Birthdays</string>
+    <string name="label_fragment_main_birthdays_list">Birthdays List</string>
 </resources>

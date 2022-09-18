@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/nav_graph.xml"
+    app:startDestination="@id/mainBirthdaysListFragment">
+
+    <fragment
+        android:id="@+id/mainBirthdaysListFragment"
+        android:name="com.example.birthdays.fragments.MainBirthdaysListFragment"
+        android:label="@string/label_fragment_main_birthdays_list"
+        tools:layout="@layout/fragment_main_birthdays_list" />
+
+</navigation>
