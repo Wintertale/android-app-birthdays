@@ -1,9 +1,9 @@
-package com.example.birthdays.ui
+package com.example.events.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.fragment.NavHostFragment
-import com.example.birthdays.R
+import com.example.events.R
 
 
 class MainActivity : AppCompatActivity() {
