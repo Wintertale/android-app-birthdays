@@ -1,1 +1,1 @@
-# android-app-birthdays
+# android-app-events
