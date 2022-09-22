@@ -1,35 +1,45 @@
 package com.example.events.ui.viewmodels
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.example.events.models.DatesInfo
-import com.example.events.models.EventPriority
-import com.example.events.models.EventType
-import java.time.LocalDate
-import kotlin.collections.ArrayList
+import androidx.lifecycle.viewModelScope
+import com.example.events.core.models.EventEntity
+import com.example.events.core.models.EventPriority
+import com.example.events.core.models.EventType
+import com.example.events.core.repositories.EventRepository
+import kotlinx.coroutines.launch
 
+class MainEventsListViewModel(application: Application) : AndroidViewModel(application) {
 
-class MainEventsListViewModel : ViewModel() {
+    private var datesInfoList = MutableLiveData<List<EventEntity>>()
+    private val eventRepository = EventRepository(getApplication())
 
-    private var datesInfoList: MutableLiveData<List<DatesInfo>> = MutableLiveData<List<DatesInfo>>()
-
-    fun getDatesInfoList(): LiveData<List<DatesInfo>> {
-        datesInfoList.value = loadUsers()
+    fun getDatesInfoList(): LiveData<List<EventEntity>> {
+        viewModelScope.launch {
+            datesInfoList.value = eventRepository.getAllEvents()
+        }
 
         return datesInfoList
     }
 
-    private fun loadUsers() :List<DatesInfo> {
+    fun addTestEvents() {
         // TODO: remove test data
-        val datesArrayList = ArrayList<DatesInfo>()
-        datesArrayList.add(DatesInfo(0, "Tuomas Holopainen", LocalDate.of(1976, 12, 25), EventType.BIRTHDAY, EventPriority.HIGH))
-        datesArrayList.add(DatesInfo(1, "Tarja Turunen", LocalDate.of(1977, 8, 17), EventType.BIRTHDAY, EventPriority.HIGH))
-        datesArrayList.add(DatesInfo(2, "Jukka Nevalainen", LocalDate.of(1978, 4, 21), EventType.BIRTHDAY, EventPriority.MIDDLE))
-        datesArrayList.add(DatesInfo(3, "Emppu Vuorinen", LocalDate.of(1978, 6, 24), EventType.BIRTHDAY, EventPriority.HIGH))
+        val datesArrayList = ArrayList<EventEntity>()
+        datesArrayList.add(EventEntity(0, "Tuomas Holopainen", 1976, 12, 25, EventType.BIRTHDAY, EventPriority.HIGH))
+        datesArrayList.add(EventEntity(1, "Tarja Turunen", 1977, 8, 17, EventType.BIRTHDAY, EventPriority.HIGH))
+        datesArrayList.add(EventEntity(2, "Jukka Nevalainen",1978, 4, 21, EventType.BIRTHDAY, EventPriority.MIDDLE))
+        datesArrayList.add(EventEntity(3, "Emppu Vuorinen", 1978, 6, 24, EventType.BIRTHDAY, EventPriority.HIGH))
 
-        return datesArrayList
+        for (event in datesArrayList) {
+            addEventToDatabase(event)
+        }
+    }
 
-        // TODO:  Do an asynchronous operation to fetch users.
+    private fun addEventToDatabase(event :EventEntity) {
+        viewModelScope.launch {
+            eventRepository.addEvent(event)
+        }
     }
 }

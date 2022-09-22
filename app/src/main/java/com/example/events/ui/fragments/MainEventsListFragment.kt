@@ -9,11 +9,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.events.R
-import com.example.events.models.DatesInfo
+import com.example.events.core.models.EventEntity
 import com.example.events.databinding.FragmentMainEventsListBinding
 import com.example.events.ui.viewmodels.MainEventsListViewModel
-
 
 class MainEventsListFragment : Fragment() {
 
@@ -25,10 +23,8 @@ class MainEventsListFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentMainEventsListBinding.inflate(inflater, container, false)
-
-
 
         return binding.root
     }
@@ -36,17 +32,22 @@ class MainEventsListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val model: MainEventsListViewModel by viewModels()
+        val mainEventsListViewModel: MainEventsListViewModel by viewModels()
+
+        // TODO: remove test data
+        mainEventsListViewModel.addTestEvents()
 
         val recyclerView: RecyclerView = binding.mainEventsRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(activity)
         // Create the observer which updates the UI.
-        val datesInfoListObserver = Observer<List<DatesInfo>> { datesInfoList ->
+        val datesInfoListObserver = Observer<List<EventEntity>> { datesInfoList ->
             recyclerView.adapter = MainEventsRecyclerViewAdapter(datesInfoList)
             // update UI
         }
+
         // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
-        model.getDatesInfoList().observe(viewLifecycleOwner, datesInfoListObserver)
+        mainEventsListViewModel.getDatesInfoList()
+            .observe(viewLifecycleOwner, datesInfoListObserver)
     }
 
     override fun onDestroyView() {
