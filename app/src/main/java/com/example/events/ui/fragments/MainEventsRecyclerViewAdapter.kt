@@ -1,43 +1,45 @@
 package com.example.events.ui.fragments
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.events.R
 import com.example.events.core.models.EventEntity
+import com.example.events.databinding.DatesRecyclerViewItemBinding
 
 class MainEventsRecyclerViewAdapter (private val datesList: List<EventEntity>) :
-    RecyclerView.Adapter<MainEventsRecyclerViewAdapter.ViewHolder>() {
+    ListAdapter<EventEntity, MainEventsRecyclerViewAdapter.EventsViewHolder>(DiffCallback()) {
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val descriptionTextView: TextView
-        val dateTextView: TextView
+    private lateinit var binding: DatesRecyclerViewItemBinding
 
-        init {
-            // TODO: Define click listener for the ViewHolder's View.
-            descriptionTextView = view.findViewById(R.id.datesItemDescriptionTextView)
-            dateTextView = view.findViewById(R.id.datesItemDateTextView)
+    class EventsViewHolder(private val binding: DatesRecyclerViewItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(event :EventEntity) {
+            binding.datesItemDescriptionTextView.text = event.description
+            binding.datesItemDateTextView.text = event.getDate().toString()
         }
     }
 
     // Create new views (invoked by the layout manager)
-    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
-
-        val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.dates_recycler_view_item, viewGroup, false)
-
-        return ViewHolder(view)
+    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): EventsViewHolder {
+        binding = DatesRecyclerViewItemBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
+        return EventsViewHolder(binding)
     }
 
     // Replace the contents of a view (invoked by the layout manager)
-    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-
-        viewHolder.descriptionTextView.text = datesList[position].description
-        viewHolder.dateTextView.text = datesList[position].getDate().toString()
+    override fun onBindViewHolder(viewHolder: EventsViewHolder, position: Int) {
+        viewHolder.bind(datesList[position])
     }
 
     // Return the size of the dataset (invoked by the layout manager)
     override fun getItemCount() = datesList.size
+
+    class DiffCallback : DiffUtil.ItemCallback<EventEntity>() {
+
+        override fun areItemsTheSame(oldItem: EventEntity, newItem: EventEntity) =
+            oldItem.id == newItem.id
+
+        override fun areContentsTheSame(oldItem: EventEntity, newItem: EventEntity) =
+            oldItem == newItem
+    }
 }
